@@ -17,9 +17,6 @@ function createCard (item) {
   cardDeleteButton.addEventListener('click', deleteCard)
 }
 
-const addCard = document.querySelector('.profile__add-button')
-addCard.addEventListener('click', createCard)
-
 function deleteCard (evt) {
   evt.target.closest('.places__item').remove()
 }
