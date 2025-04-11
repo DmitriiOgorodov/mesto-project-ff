@@ -7,17 +7,16 @@ initialCards.forEach((item) => {
   const cardDeleteButton = card.querySelector('.card__delete-button')
 
   card.querySelector('.card__image').src = item.link;
+  card.querySelector('.card__image').setAttribute('alt', item.name);
   card.querySelector('.card__title').textContent = item.name;
 
   places__list.append(card)
 
-  removeCard(cardDeleteButton)
+  cardDeleteButton.addEventListener('click', deleteCard)
 })
 
-function removeCard (button) {
-  button.addEventListener('click', (evt) => {
-    evt.target.closest('.places__item').remove();
-  })
+function deleteCard (evt) {
+  evt.target.closest('.places__item').remove()
 }
 
 // @todo: DOM узлы
