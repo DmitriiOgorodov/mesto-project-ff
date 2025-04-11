@@ -1,8 +1,10 @@
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content
-const places__list = document.querySelector('.places__list')
+const placesList = document.querySelector('.places__list')
 
-initialCards.forEach((item) => {
+initialCards.forEach(createCard)
+
+function createCard (item) {
   const card = cardTemplate.querySelector('.places__item').cloneNode(true)
   const cardDeleteButton = card.querySelector('.card__delete-button')
 
@@ -10,10 +12,13 @@ initialCards.forEach((item) => {
   card.querySelector('.card__image').setAttribute('alt', item.name);
   card.querySelector('.card__title').textContent = item.name;
 
-  places__list.append(card)
+  placesList.append(card)
 
   cardDeleteButton.addEventListener('click', deleteCard)
-})
+}
+
+const addCard = document.querySelector('.profile__add-button')
+addCard.addEventListener('click', createCard)
 
 function deleteCard (evt) {
   evt.target.closest('.places__item').remove()
