@@ -19,6 +19,7 @@ function createCard(name, link) {
   const card = cardTemplate.querySelector('.places__item').cloneNode(true)
   const cardDeleteButton = card.querySelector('.card__delete-button')
   const cardLikeButton = card.querySelector('.card__like-button')
+  const cardImage = card.querySelector('.card__image')
 
   card.querySelector('.card__image').src = link;
   card.querySelector('.card__image').setAttribute('alt', name);
@@ -26,8 +27,14 @@ function createCard(name, link) {
 
   cardDeleteButton.addEventListener('click', deleteCard)
   cardLikeButton.addEventListener('click', likeCard)
+  cardImage.addEventListener('click', (evt) =>{
+    openPopap(imagePopap)
+    document.querySelector('.popup__image').src = evt.target.src
+    document.querySelector('.popup__image').alt = evt.target.alt
+    document.querySelector('.popup__caption').textContent = evt.target.alt
+  })
 
-  placesList.append(card)
+  placesList.prepend(card)
 }
 
 // @todo: Функция удаления карточки
@@ -41,7 +48,7 @@ function likeCard(evt) {
 }
 
 // @todo: Вывести карточки на страницу
-initialCards.forEach((item) => {
+initialCards.reverse().forEach((item) => {
   createCard(item.name, item.link)
 })
 
@@ -51,12 +58,18 @@ const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
 
 // Модальные окна
+const allPopups = document.querySelectorAll('.popup')
+allPopups.forEach((popup) => {
+  popup.classList.add('popup_is-animated')
+})
+
 const editProfilePopap = document.querySelector('.popup_type_edit')
 const addNewCardPopap = document.querySelector('.popup_type_new-card')
+const imagePopap = document.querySelector('.popup_type_image')
 
 // Функция открытия попапа
-function openPopap(popap) {
-  popap.classList.add('popup_is-opened')
+function openPopap(popup) {
+  popup.classList.add('popup_is-opened')
 }
 
 editButton.addEventListener('click', () => openPopap(editProfilePopap))
@@ -132,10 +145,3 @@ function addCardSubmit(evt) {
 }
 
 addForm.addEventListener('submit', addCardSubmit);
-
-// console.log(linkInput)
-
-
-
-console.log(evt.target.classList.toggle('.card__like-button_is-active'))
-// createCard('name', 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg', deleteCard)
