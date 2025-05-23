@@ -15,27 +15,34 @@ const cardTemplate = document.querySelector('#card-template').content
 const placesList = document.querySelector('.places__list')
 
 // @todo: Функция создания карточки
-function createCard (name, link) {
+function createCard(name, link) {
   const card = cardTemplate.querySelector('.places__item').cloneNode(true)
   const cardDeleteButton = card.querySelector('.card__delete-button')
+  const cardLikeButton = card.querySelector('.card__like-button')
 
   card.querySelector('.card__image').src = link;
   card.querySelector('.card__image').setAttribute('alt', name);
   card.querySelector('.card__title').textContent = name;
 
   cardDeleteButton.addEventListener('click', deleteCard)
+  cardLikeButton.addEventListener('click', likeCard)
 
   placesList.append(card)
 }
 
 // @todo: Функция удаления карточки
-function deleteCard (evt) {
+function deleteCard(evt) {
   evt.target.closest('.places__item').remove()
+}
+
+// Лайк карточки
+function likeCard(evt) {
+  evt.target.classList.toggle('card__like-button_is-active')
 }
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach((item) => {
-  createCard(item.name, item.link, deleteCard)
+  createCard(item.name, item.link)
 })
 
 // Логика модальных окон
@@ -107,17 +114,16 @@ function editFormSubmit(evt) {
 
 editForm.addEventListener('submit', editFormSubmit);
 
-// Логика  карточек
+// Логика добавления карточек
 const addForm = document.querySelector('.popup_type_new-card')
-// Находим поля формы в DOM
+
 const placeInput = addForm.querySelector('input[name=place-name]')
 const linkInput = addForm.querySelector('input[name=link]')
-// Обработчик «отправки» формы, хотя пока
-// она никуда отправляться не будет
+
 function addCardSubmit(evt) {
     evt.preventDefault(); 
     
-    createCard(placeInput.value, linkInput.value, deleteCard)
+    createCard(placeInput.value, linkInput.value)
 
     placeInput.value = ''
     linkInput.value = ''
@@ -127,6 +133,9 @@ function addCardSubmit(evt) {
 
 addForm.addEventListener('submit', addCardSubmit);
 
-console.log(linkInput)
+// console.log(linkInput)
 
+
+
+console.log(evt.target.classList.toggle('.card__like-button_is-active'))
 // createCard('name', 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg', deleteCard)
