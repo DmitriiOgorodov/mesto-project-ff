@@ -87,35 +87,46 @@ function closeByEscape(evt) {
 
 document.addEventListener('keydown', closeByEscape);
 
-// Логика редактирования карточек
-// Находим форму в DOM
-const formElement = document.querySelector('.popup_type_edit')// Воспользуйтесь методом querySelector()
-// Находим поля формы в DOM
-const nameInput = formElement.querySelector('input[name=name]')// Воспользуйтесь инструментом .querySelector()
-const jobInput = formElement.querySelector('input[name=description]')// Воспользуйтесь инструментом .querySelector()
+// Логика редактирования профиля
+const editForm = document.querySelector('.popup_type_edit')
+
+const nameInput = editForm.querySelector('input[name=name]')
+const jobInput = editForm.querySelector('input[name=description]')
 
 nameInput.value = document.querySelector('.profile__title').textContent
 jobInput.value = document.querySelector('.profile__description').textContent
-// Обработчик «отправки» формы, хотя пока
-// она никуда отправляться не будет
-function handleFormSubmit(evt) {
-    evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-                                                // Так мы можем определить свою логику отправки.
-                                                // О том, как это делать, расскажем позже.
 
-    // Получите значение полей jobInput и nameInput из свойства value
+function editFormSubmit(evt) {
+    evt.preventDefault(); 
     
-    // Выберите элементы, куда должны быть вставлены значения полей
-
-    // Вставьте новые значения с помощью textContent
     document.querySelector('.profile__title').textContent = nameInput.value
     document.querySelector('.profile__description').textContent = jobInput.value
 
-    closePopap(formElement)
+    closePopap(editForm)
 }
 
-// Прикрепляем обработчик к форме:
-// он будет следить за событием “submit” - «отправка»
-formElement.addEventListener('submit', handleFormSubmit);
+editForm.addEventListener('submit', editFormSubmit);
 
-console.log(jobInput.value)
+// Логика  карточек
+const addForm = document.querySelector('.popup_type_new-card')
+// Находим поля формы в DOM
+const placeInput = addForm.querySelector('input[name=place-name]')
+const linkInput = addForm.querySelector('input[name=link]')
+// Обработчик «отправки» формы, хотя пока
+// она никуда отправляться не будет
+function addCardSubmit(evt) {
+    evt.preventDefault(); 
+    
+    createCard(placeInput.value, linkInput.value, deleteCard)
+
+    placeInput.value = ''
+    linkInput.value = ''
+
+    closePopap(addForm)
+}
+
+addForm.addEventListener('submit', addCardSubmit);
+
+console.log(linkInput)
+
+// createCard('name', 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg', deleteCard)
