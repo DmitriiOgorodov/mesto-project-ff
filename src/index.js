@@ -38,7 +38,7 @@ initialCards.forEach((item) => {
   createCard(item.name, item.link, deleteCard)
 })
 
-// Работа модальных окон
+// Логика модальных окон
 // Кнопки
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
@@ -52,6 +52,9 @@ function openPopap(popap) {
   popap.classList.add('popup_is-opened')
 }
 
+editButton.addEventListener('click', () => openPopap(editProfilePopap))
+addButton.addEventListener('click', () => openPopap(addNewCardPopap))
+
 // Функция закрытия попапа
 function closePopap(popup) {
   popup.classList.remove('popup_is-opened')
@@ -64,12 +67,55 @@ document.querySelectorAll('.popup__close').forEach((button) => {
 })
 
 // Закрытие на оверлей
+document.querySelectorAll('.popup').forEach((popup) => {
+  popup.addEventListener('click', (evt) => {
+    if (evt.target === evt.currentTarget) {
+      closePopap(popup)
+    }
+  })
+})
 
+// Закрытие на ESC
+function closeByEscape(evt) {
+    if (evt.key === 'Escape') {
+        const openedPopup = document.querySelector('.popup_is-opened');
+        if (openedPopup) {
+            closePopap(openedPopup);
+        }
+    }
+}
 
-// document.querySelector('.popup__close').addEventListener('click', closePopap)
+document.addEventListener('keydown', closeByEscape);
 
-editButton.addEventListener('click', () => openPopap(editProfilePopap))
-addButton.addEventListener('click', () => openPopap(addNewCardPopap))
+// Логика редактирования карточек
+// Находим форму в DOM
+const formElement = document.querySelector('.popup_type_edit')// Воспользуйтесь методом querySelector()
+// Находим поля формы в DOM
+const nameInput = formElement.querySelector('input[name=name]')// Воспользуйтесь инструментом .querySelector()
+const jobInput = formElement.querySelector('input[name=description]')// Воспользуйтесь инструментом .querySelector()
 
-// console.log(document.querySelectorAll('.popup__close'))
+nameInput.value = document.querySelector('.profile__title').textContent
+jobInput.value = document.querySelector('.profile__description').textContent
+// Обработчик «отправки» формы, хотя пока
+// она никуда отправляться не будет
+function handleFormSubmit(evt) {
+    evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+                                                // Так мы можем определить свою логику отправки.
+                                                // О том, как это делать, расскажем позже.
 
+    // Получите значение полей jobInput и nameInput из свойства value
+    
+    // Выберите элементы, куда должны быть вставлены значения полей
+
+    // Вставьте новые значения с помощью textContent
+    document.querySelector('.profile__title').textContent = nameInput.value
+    document.querySelector('.profile__description').textContent = jobInput.value
+
+    closePopap(formElement)
+}
+
+// Прикрепляем обработчик к форме:
+// он будет следить за событием “submit” - «отправка»
+formElement.addEventListener('submit', handleFormSubmit);
+
+console.log(jobInput.value)
