@@ -12,21 +12,21 @@ document.querySelector('.profile__image').style.backgroundImage = `url(${avatar}
 
 // Импорты функций
 import { createCard } from './components/card.js';
-import { openPopap, closePopap, closeByEscape } from './components/modal.js';
+import { openPopap, closePopap } from './components/modal.js';
 
 // @todo: DOM узлы
 const placesList = document.querySelector('.places__list')
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach((item) => {
-  placesList.append(createCard(item))
+  placesList.append(createCard(item, openCardImage))
 })
 
 // Логика модальных окон
 // Кнопки
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
-const cardImages = document.querySelectorAll('.card__image')
+// const cardImages = document.querySelectorAll('.card__image')
 
 // Модальные окна
 const editProfilePopap = document.querySelector('.popup_type_edit')
@@ -50,14 +50,14 @@ addButton.addEventListener('click', () => {
   openPopap(newCardPopap)
 })
 
-cardImages.forEach(item => {
+function openCardImage(item) {
   item.addEventListener('click', (evt) =>{
     openPopap(imagePopap)
     document.querySelector('.popup__image').src = evt.target.src
     document.querySelector('.popup__image').alt = evt.target.alt
     document.querySelector('.popup__caption').textContent = evt.target.alt
   })
-}); 
+}
 
 // События закрытия
 document.querySelectorAll('.popup__close').forEach((button) => {
@@ -72,8 +72,6 @@ document.querySelectorAll('.popup').forEach((popup) => {
     }
   })
 })
-
-document.addEventListener('keydown', closeByEscape);
 
 // Логика редактирования профиля
 const editForm = document.querySelector('.popup_type_edit')
@@ -104,7 +102,7 @@ function addCardSubmit(evt) {
 
   const initialCard = {name: placeInput.value, link: linkInput.value}
   
-  placesList.prepend(createCard(initialCard))
+  placesList.prepend(createCard(initialCard, openCardImage))
 
   placeInput.value = ''
   linkInput.value = ''
