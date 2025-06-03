@@ -13,6 +13,7 @@ document.querySelector('.profile__image').style.backgroundImage = `url(${avatar}
 // Импорты функций
 import { createCard } from './components/card.js';
 import { openPopap, closePopap } from './components/modal.js';
+import { enableValidation, clearValidation } from './components/validation.js';
 
 // @todo: DOM узлы
 const placesList = document.querySelector('.places__list')
@@ -23,12 +24,9 @@ initialCards.forEach((item) => {
 })
 
 // Логика модальных окон
-// Кнопки
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
-// const cardImages = document.querySelectorAll('.card__image')
 
-// Модальные окна
 const editProfilePopap = document.querySelector('.popup_type_edit')
 const newCardPopap = document.querySelector('.popup_type_new-card')
 const imagePopap = document.querySelector('.popup_type_image')
@@ -40,18 +38,22 @@ allPopups.forEach((popup) => {
 })
 
 // События открытия
-editButton.addEventListener('click', () =>{
+editButton.addEventListener('click', () => {
   nameInput.value = document.querySelector('.profile__title').textContent
   jobInput.value = document.querySelector('.profile__description').textContent
+  // clearValidation(editForm, config)
   openPopap(editProfilePopap)
 })
 
 addButton.addEventListener('click', () => {
+  // clearValidation(addForm, config)
   openPopap(newCardPopap)
+  placeInput.value = ''
+  linkInput.value = ''
 })
 
 function openCardImage(item) {
-  item.addEventListener('click', (evt) =>{
+  item.addEventListener('click', (evt) => {
     openPopap(imagePopap)
     document.querySelector('.popup__image').src = evt.target.src
     document.querySelector('.popup__image').alt = evt.target.alt
@@ -73,7 +75,7 @@ document.querySelectorAll('.popup').forEach((popup) => {
   })
 })
 
-// Логика редактирования профиля
+// Попап редактирования профиля
 const editForm = document.querySelector('.popup_type_edit')
 
 const nameInput = editForm.querySelector('input[name=name]')
@@ -103,9 +105,6 @@ function addCardSubmit(evt) {
   const initialCard = {name: placeInput.value, link: linkInput.value}
   
   placesList.prepend(createCard(initialCard, openCardImage))
-
-  placeInput.value = ''
-  linkInput.value = ''
 }
 
 addForm.addEventListener('submit', (evt) => {
@@ -113,3 +112,14 @@ addForm.addEventListener('submit', (evt) => {
   closePopap(addForm)
 })
 
+
+const config = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}
+
+enableValidation(config);
