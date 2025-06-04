@@ -1,8 +1,8 @@
-// @todo: Темплейт карточки
+// Темплейт карточки
 import './pages/index.css'
 import {initialCards} from './scripts/cards.js'
 
-// Импорт изображений
+// Импорты изображений
 import logo from './images/logo.svg';
 import avatar from './images/avatar.jpg';
 
@@ -14,22 +14,29 @@ document.querySelector('.profile__image').style.backgroundImage = `url(${avatar}
 import { createCard } from './components/card.js';
 import { openPopap, closePopap } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
+import {
+  loadUserInfo,
+  loadCards,
+} from './components/api.js';
 
-// @todo: DOM узлы
+// DOM узлы
 const placesList = document.querySelector('.places__list')
 
-// @todo: Вывести карточки на страницу
+// Вывести карточки на страницу
 initialCards.forEach((item) => {
   placesList.append(createCard(item, openCardImage))
 })
 
+loadCards()
+  .then((cards) => {
+    cards.forEach((item) => {
+      placesList.append(createCard(item, openCardImage)); // Полученный массив карточек
+    })
+  })
+
 // Логика модальных окон
-// Кнопки
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
-// const cardImages = document.querySelectorAll('.card__image')
-
-// Модальные окна
 const editProfilePopap = document.querySelector('.popup_type_edit')
 const newCardPopap = document.querySelector('.popup_type_new-card')
 const imagePopap = document.querySelector('.popup_type_image')
@@ -78,9 +85,8 @@ document.querySelectorAll('.popup').forEach((popup) => {
   })
 })
 
-// Логика редактирования профиля
+// Попап редактирования профиля
 const editForm = document.querySelector('.popup_type_edit')
-
 const nameInput = editForm.querySelector('input[name=name]')
 const jobInput = editForm.querySelector('input[name=description]')
 
@@ -98,7 +104,6 @@ editForm.addEventListener('submit', (evt) => {
 
 // Попап добавления карточек
 const addForm = document.querySelector('.popup_type_new-card')
-
 const placeInput = addForm.querySelector('input[name=place-name]')
 const linkInput = addForm.querySelector('input[name=link]')
 
@@ -118,7 +123,7 @@ addForm.addEventListener('submit', (evt) => {
   closePopap(addForm)
 })
 
-
+// Включение валидации
 const config = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
