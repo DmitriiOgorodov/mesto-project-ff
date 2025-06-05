@@ -27,13 +27,6 @@ initialCards.forEach((item) => {
   placesList.append(createCard(item, openCardImage))
 })
 
-loadCards()
-  .then((cards) => {
-    cards.forEach((item) => {
-      placesList.append(createCard(item, openCardImage)); // Полученный массив карточек
-    })
-  })
-
 // Логика модальных окон
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
@@ -134,3 +127,21 @@ const config = {
 }
 
 enableValidation(config);
+
+// Загрузка карточек с сервера
+loadCards()
+  .then((cards) => {
+    cards.forEach((card) => {
+      placesList.append(createCard(card, openCardImage)); // Полученный массив карточек
+    })
+  })
+
+// Загрузка данных о пользователе
+loadUserInfo()
+  .then((user) => {
+    console.log(user)
+    document.querySelector('.profile__title').textContent = user.name
+    document.querySelector('.profile__description').textContent = user.about
+    document.querySelector('.profile__image').style.backgroundImage = `url(${user.avatar})`
+    console.log(document.querySelector('.profile__image').style.backgroundImage)
+  })
