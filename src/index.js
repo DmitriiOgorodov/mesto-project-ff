@@ -83,11 +83,15 @@ const editForm = document.querySelector('.popup_type_edit')
 const nameInput = editForm.querySelector('input[name=name]')
 const jobInput = editForm.querySelector('input[name=description]')
 
+const profileTitle = document.querySelector('.profile__title')
+const profileDescription = document.querySelector('.profile__description')
+const profileImage = document.querySelector('.profile__image')
+
 function editFormSubmit(evt) {
     evt.preventDefault(); 
     
-    document.querySelector('.profile__title').textContent = nameInput.value
-    document.querySelector('.profile__description').textContent = jobInput.value
+    profileTitle.textContent = nameInput.value
+    profileDescription.textContent = jobInput.value
 }
 
 editForm.addEventListener('submit', (evt) => {
@@ -128,20 +132,32 @@ const config = {
 
 enableValidation(config);
 
+// // Загрузка данных о пользователе
+// loadUserInfo()
+//   .then((user) => {
+//     profileTitle.textContent = user.name
+//     profileDescription.textContent = user.about
+//     profileImage.style.backgroundImage = user.avatar
+//   })
+
 // Загрузка карточек с сервера
-loadCards()
-  .then((cards) => {
+// loadCards()
+//   .then((cards) => {
+//     cards.forEach((card) => {
+//       placesList.append(createCard(card, openCardImage)); // Полученный массив карточек
+//     })
+//   })
+
+Promise.all([loadUserInfo(), loadCards()])
+  .then(([user, cards]) => {
+    profileTitle.textContent = user.name
+    profileDescription.textContent = user.about
+    profileImage.src = user.avatar
+
     cards.forEach((card) => {
       placesList.append(createCard(card, openCardImage)); // Полученный массив карточек
     })
   })
-
-// Загрузка данных о пользователе
-loadUserInfo()
-  .then((user) => {
-    console.log(user)
-    document.querySelector('.profile__title').textContent = user.name
-    document.querySelector('.profile__description').textContent = user.about
-    document.querySelector('.profile__image').style.backgroundImage = `url(${user.avatar})`
-    console.log(document.querySelector('.profile__image').style.backgroundImage)
-  })
+  .catch((err) => {
+    console.log(err);
+  });
