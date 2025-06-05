@@ -22,12 +22,22 @@ export const loadUserInfo = () => {
   .then(checkResponse)
 }
 
-console.log(loadUserInfo())
-
 // Загрузка карточек с сервера
 export const loadCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
+  })
+  .then(checkResponse);
+}
+
+export const editProfile = (name, about) => {
+  return fetch(`${config.baseUrl}/users/me`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      name,
+      about
+    })
   })
   .then(checkResponse);
 }

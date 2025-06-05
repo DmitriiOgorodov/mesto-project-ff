@@ -17,6 +17,7 @@ import { enableValidation, clearValidation } from './components/validation.js';
 import {
   loadUserInfo,
   loadCards,
+  editProfile,
 } from './components/api.js';
 
 // DOM узлы
@@ -92,6 +93,16 @@ function editFormSubmit(evt) {
     
     profileTitle.textContent = nameInput.value
     profileDescription.textContent = jobInput.value
+
+    editProfile(nameInput.value, jobInput.value)
+      .then((profileInfo) => {
+        profileTitle.textContent = profileInfo.name
+        profileDescription.textContent = profileInfo.about
+        console.log(profileInfo)
+      })
+      .catch((err) => {
+    console.log(err);
+  });
 }
 
 editForm.addEventListener('submit', (evt) => {
@@ -161,3 +172,4 @@ Promise.all([loadUserInfo(), loadCards()])
   .catch((err) => {
     console.log(err);
   });
+
