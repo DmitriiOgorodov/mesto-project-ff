@@ -30,8 +30,6 @@ export const loadCards = () => {
   .then(checkResponse);
 }
 
-console.log(loadCards())
-
 export const editProfile = ( name, about ) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
@@ -55,3 +53,12 @@ export const addNewCard = ( name, link ) => {
   })
   .then(checkResponse);
 }
+
+export const deleteCardFromServer = ( id ) => {
+  return fetch(`${config.baseUrl}/cards/${id}`, {
+    method: 'DELETE',
+    headers: config.headers
+  })
+  .then(checkResponse);
+}
+
