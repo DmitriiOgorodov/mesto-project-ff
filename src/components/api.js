@@ -30,13 +30,27 @@ export const loadCards = () => {
   .then(checkResponse);
 }
 
-export const editProfile = (name, about) => {
+console.log(loadCards())
+
+export const editProfile = ( name, about ) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify({
       name,
       about
+    })
+  })
+  .then(checkResponse);
+}
+
+export const addNewCard = ( name, link ) => {
+  return fetch(`${config.baseUrl}/cards`, {
+    method: 'POST',
+    headers: config.headers,
+    body: JSON.stringify ({
+      name,
+      link
     })
   })
   .then(checkResponse);

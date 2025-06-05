@@ -18,6 +18,7 @@ import {
   loadUserInfo,
   loadCards,
   editProfile,
+  addNewCard
 } from './components/api.js';
 
 // DOM узлы
@@ -89,20 +90,20 @@ const profileDescription = document.querySelector('.profile__description')
 const profileImage = document.querySelector('.profile__image')
 
 function editFormSubmit(evt) {
-    evt.preventDefault(); 
+  evt.preventDefault(); 
     
-    profileTitle.textContent = nameInput.value
-    profileDescription.textContent = jobInput.value
+  profileTitle.textContent = nameInput.value
+  profileDescription.textContent = jobInput.value
 
-    editProfile(nameInput.value, jobInput.value)
-      .then((profileInfo) => {
-        profileTitle.textContent = profileInfo.name
-        profileDescription.textContent = profileInfo.about
-        console.log(profileInfo)
-      })
-      .catch((err) => {
-    console.log(err);
-  });
+  editProfile(nameInput.value, jobInput.value)
+    .then((profileInfo) => {
+      profileTitle.textContent = profileInfo.name
+      profileDescription.textContent = profileInfo.about
+      console.log(profileInfo)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 editForm.addEventListener('submit', (evt) => {
@@ -119,6 +120,15 @@ function addCardSubmit(evt) {
   evt.preventDefault(); 
 
   const initialCard = {name: placeInput.value, link: linkInput.value}
+
+  addNewCard(initialCard.name, initialCard.link)
+    .then((cardInfo) => {
+      cardInfo.name = initialCard.name
+      cardInfo.link = initialCard.link
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   
   placesList.prepend(createCard(initialCard, openCardImage))
 
