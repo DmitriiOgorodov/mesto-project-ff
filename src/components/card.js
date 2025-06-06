@@ -3,7 +3,7 @@ import { addLike, deleteCardFromServer, deleteLike } from "./api"
 export const cardTemplate = document.querySelector('#card-template').content
 
 // @todo: Функция создания карточки
-export function createCard(cardData, showCardImage, user) {
+export function createCard(cardData, handleCardClick, user) {
   const card = cardTemplate.querySelector('.places__item').cloneNode(true)
   const cardDeleteButton = card.querySelector('.card__delete-button')
   const cardLikeButton = card.querySelector('.card__like-button')
@@ -13,6 +13,8 @@ export function createCard(cardData, showCardImage, user) {
   card.querySelector('.card__image').src = cardData.link;
   card.querySelector('.card__image').setAttribute('alt', cardData.name);
   card.querySelector('.card__title').textContent = cardData.name;
+
+  cardImage.addEventListener('click', handleCardClick);
 
   cardDeleteButton.addEventListener('click', evt => {
     deleteCard(evt, cardData['_id'])
@@ -27,7 +29,7 @@ export function createCard(cardData, showCardImage, user) {
     likeCard(evt)
   })
 
-  showCardImage(cardImage)
+  // showCardImage(cardImage)
   checkLike(cardData, user, cardLikeButton)
 
   return card

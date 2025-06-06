@@ -30,16 +30,18 @@ const placesList = document.querySelector('.places__list')
 //   placesList.append(createCard(item, openCardImage))
 // })
 
-let userId;
 
 // Логика модальных окон
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
 const avatarButton = document.querySelector('.profile__avatar-button')
+const profileTitle = document.querySelector('.profile__title')
+const profileDescription = document.querySelector('.profile__description')
 const editForm = document.querySelector('.popup_type_edit')
 const addForm = document.querySelector('.popup_type_new-card')
 const imagePopap = document.querySelector('.popup_type_image')
 const avatarForm = document.querySelector('.popup_type_new-avatar')
+const popupImage = document.querySelector('.popup__image');
 
 // Анимация
 const allPopups = document.querySelectorAll('.popup')
@@ -49,8 +51,8 @@ allPopups.forEach((popup) => {
 
 // События открытия
 editButton.addEventListener('click', () =>{
-  nameInput.value = document.querySelector('.profile__title').textContent
-  jobInput.value = document.querySelector('.profile__description').textContent
+  nameInput.value = profileTitle.textContent
+  jobInput.value = profileDescription.textContent
   clearValidation(editForm, config)
   openPopap(editForm)
 })
@@ -67,13 +69,11 @@ avatarButton.addEventListener('click', () => {
   clearValidation(avatarForm, config)
 })
 
-function showCardImage(item) {
-  item.addEventListener('click', (evt) =>{
-    openPopap(imagePopap)
-    document.querySelector('.popup__image').src = evt.target.src
-    document.querySelector('.popup__image').alt = evt.target.alt
-    document.querySelector('.popup__caption').textContent = evt.target.alt
-  })
+function handleCardImageClick(evt) {
+  popupImage.src = evt.target.src;
+  popupImage.alt = evt.target.alt;
+  document.querySelector('.popup__caption').textContent = evt.target.alt;
+  openPopap(imagePopap);
 }
 
 // События закрытия
@@ -82,7 +82,7 @@ document.querySelectorAll('.popup__close').forEach((button) => {
   button.addEventListener('click', () => closePopap(popup))
 })
 
-document.querySelectorAll('.popup').forEach((popup) => {
+allPopups.forEach((popup) => {
   popup.addEventListener('click', (evt) => {
     if (evt.target === evt.currentTarget) {
       closePopap(popup)
@@ -94,23 +94,25 @@ document.querySelectorAll('.popup').forEach((popup) => {
 const avatarLinkInput = avatarForm.querySelector('input[name=avatar-link]')
 const avatarImage = document.querySelector('.profile__image')
 
-  function avatarFormSubmit(evt) {
+  function submitAvatarForm(evt) {
   evt.preventDefault();
   const avatarButtonSave = avatarForm.querySelector('.popup__button');
   avatarButtonSave.textContent = 'Сохранение...';
   updateAvatar(avatarLinkInput.value)
     .then(data => {
       avatarImage.style.backgroundImage = `url(${data.avatar})`;
+      closePopap(avatarForm);
     })
-    .catch(err => console.log(err))
+    .catch((err) => {
+      console.log(err);
+    })
     .finally(() => {
       avatarButtonSave.textContent = 'Сохранить';
     });
 }
 
 avatarForm.addEventListener('submit', (evt) => {
-  avatarFormSubmit(evt)
-  closePopap(avatarForm)
+  submitAvatarForm(evt)
 })
 
 // Попап редактирования профиля
@@ -118,13 +120,12 @@ avatarForm.addEventListener('submit', (evt) => {
 const nameInput = editForm.querySelector('input[name=name]')
 const jobInput = editForm.querySelector('input[name=description]')
 
-const profileTitle = document.querySelector('.profile__title')
-const profileDescription = document.querySelector('.profile__description')
 const profileImage = document.querySelector('.profile__image')
 
 function editFormSubmit(evt) {
   evt.preventDefault(); 
-    
+  const profileButtonSave = editForm.querySelector('.popup__button');
+  profileButtonSave.textContent = 'Сохранение...';
   profileTitle.textContent = nameInput.value
   profileDescription.textContent = jobInput.value
 
@@ -132,16 +133,18 @@ function editFormSubmit(evt) {
     .then((profileInfo) => {
       profileTitle.textContent = profileInfo.name
       profileDescription.textContent = profileInfo.about
-      console.log(profileInfo)
+      closePopap(editForm)
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      profileButtonSave.textContent = 'Сохранить';
     });
 }
 
 editForm.addEventListener('submit', (evt) => {
   editFormSubmit(evt)
-  closePopap(editForm)
 });
 
 // Попап добавления карточек
@@ -151,25 +154,27 @@ const linkInput = addForm.querySelector('input[name=link]')
 
 function addCardSubmit(evt) {
   evt.preventDefault(); 
-
+  const cardButtonSave = addForm.querySelector('.popup__button');
+  cardButtonSave.textContent = 'Сохранение...';
   const initialCard = {name: placeInput.value, link: linkInput.value}
 
   addNewCard(initialCard.name, initialCard.link)
     .then((res) => {
-      placesList.prepend(createCard(res, showCardImage))
-      console.log(res)
+      placesList.prepend(createCard(res, handleCardImageClick))
+      placeInput.value = ''
+      linkInput.value = ''
+      closePopap(addForm)
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      cardButtonSave.textContent = 'Создать';
     });
-
-  placeInput.value = ''
-  linkInput.value = ''
 }
 
 addForm.addEventListener('submit', (evt) => {
   addCardSubmit(evt)
-  closePopap(addForm)
 })
 
 // Включение валидации
@@ -193,7 +198,7 @@ Promise.all([loadUserInfo(), loadCards()])
     profileImage.style.backgroundImage = `url(${user.avatar})`;
 
     cards.forEach((card) => {
-      placesList.append(createCard(card, showCardImage, user)); // Полученный массив карточек
+      placesList.append(createCard(card, handleCardImageClick, user)); // Полученный массив карточек
     })
     return user._id
   })
