@@ -25,9 +25,9 @@ import {
 const placesList = document.querySelector('.places__list')
 
 // Вывести карточки на страницу
-initialCards.forEach((item) => {
-  placesList.append(createCard(item, openCardImage))
-})
+// initialCards.forEach((item) => {
+//   placesList.append(createCard(item, openCardImage))
+// })
 
 // Логика модальных окон
 const editButton = document.querySelector('.profile__edit-button')
@@ -174,6 +174,8 @@ Promise.all([loadUserInfo(), loadCards()])
     profileTitle.textContent = user.name
     profileDescription.textContent = user.about
     profileImage.src = user.avatar
+
+    console.log(user)
 
     cards.forEach((card) => {
       placesList.append(createCard(card, openCardImage)); // Полученный массив карточек

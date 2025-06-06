@@ -1,4 +1,4 @@
-import { deleteCardFromServer } from "./api"
+import { addLike, deleteCardFromServer, deleteLike } from "./api"
 
 export const cardTemplate = document.querySelector('#card-template').content
 
@@ -12,24 +12,35 @@ export function createCard(fieldValues, openCardImage) {
   card.querySelector('.card__image').src = fieldValues.link;
   card.querySelector('.card__image').setAttribute('alt', fieldValues.name);
   card.querySelector('.card__title').textContent = fieldValues.name;
-  console.log(fieldValues._id)
+
   cardDeleteButton.addEventListener('click', evt => {
-    deleteCard(evt)
-    deleteCardFromServer(fieldValues['_id'])
-    .then(() => {
-      cardElement.remove();
-    })
-    .catch(err => console.log(err))
+    deleteCard(evt, fieldValues['_id'])
   })
-  cardLikeButton.addEventListener('click', likeCard)
+
   openCardImage(cardImage)
+
+  if (fieldValues.likes.some((element) => element['_id'] === 'e30dbc642a6775f59f890fce')){
+    cardLikeButton.classList.add('card__like-button_is-active')
+    cardLikeButton.addEventListener('click', (evt) => {
+      likeCard(evt)
+      deleteLike(fieldValues['_id'])
+    })
+  } else {
+    cardLikeButton.classList.remove('card__like-button_is-active')
+    cardLikeButton.addEventListener('click', (evt) => {
+      likeCard(evt)
+      addLike(fieldValues['_id'])
+    })
+  }
 
   return card
 }
 
 // @todo: Функция удаления карточки
-export function deleteCard(evt) {
+export function deleteCard(evt, id) {
   evt.target.closest('.places__item').remove()
+  deleteCardFromServer(id)
+    .catch(err => console.log(err))
 }
 
 // Лайк карточки
