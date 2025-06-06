@@ -32,14 +32,12 @@ export function createCard(cardData, handleCardClick, user) {
       .then(res => {
           cardData.likes = res.likes;
           likeCounter.textContent = res.likes.length;
-          likeCard(evt);
         })
     } else {
       addLike(cardData['_id'])
       .then(res => {
           cardData.likes = res.likes;
           likeCounter.textContent = res.likes.length;
-          likeCard(evt);
         })
     }
     likeCard(evt)
