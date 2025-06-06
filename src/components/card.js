@@ -16,10 +16,8 @@ export function createCard(cardData, handleCardClick, user) {
 
   cardImage.addEventListener('click', handleCardClick);
 
-  // cardDeleteButton.addEventListener('click', evt => {
-  //   deleteCard(evt, cardData['_id'])
-  // })
-
+  likeCounter.textContent = cardData.likes.length
+  
   if (cardData.owner._id === user._id) {
     cardDeleteButton.addEventListener('click', evt => {
     deleteCard(evt, cardData._id)
@@ -31,8 +29,18 @@ export function createCard(cardData, handleCardClick, user) {
   cardLikeButton.addEventListener('click', evt => {
     if (cardData.likes.some((element) => element['_id'] === user['_id'])) {
       deleteLike(cardData['_id'])
+      .then(res => {
+          cardData.likes = res.likes;
+          likeCounter.textContent = res.likes.length;
+          likeCard(evt);
+        })
     } else {
       addLike(cardData['_id'])
+      .then(res => {
+          cardData.likes = res.likes;
+          likeCounter.textContent = res.likes.length;
+          likeCard(evt);
+        })
     }
     likeCard(evt)
   })
