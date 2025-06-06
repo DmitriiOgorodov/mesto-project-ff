@@ -30,6 +30,8 @@ const placesList = document.querySelector('.places__list')
 //   placesList.append(createCard(item, openCardImage))
 // })
 
+let userId;
+
 // Логика модальных окон
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
@@ -185,17 +187,17 @@ enableValidation(config);
 
 Promise.all([loadUserInfo(), loadCards()])
   .then(([user, cards]) => {
+    // userID = user._id
     profileTitle.textContent = user.name
     profileDescription.textContent = user.about
     profileImage.style.backgroundImage = `url(${user.avatar})`;
 
-    console.log(user)
-
     cards.forEach((card) => {
-      placesList.append(createCard(card, showCardImage)); // Полученный массив карточек
+      placesList.append(createCard(card, showCardImage, user)); // Полученный массив карточек
     })
+    return user._id
   })
   .catch((err) => {
     console.log(err);
   });
-
+  
