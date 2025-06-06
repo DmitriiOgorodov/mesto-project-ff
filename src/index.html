@@ -14,7 +14,12 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" style="background-image: url('./images/avatar.jpg');"></div>
+      <div class="profile__image" style="background-image: url('./images/avatar.jpg');">
+        <button class="profile__avatar-button" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" class="profile__avatar-button_icon" fill="none" viewBox="0 0 26 26"><path d="M26 3.454 6.77 22.794 3.336 19.29 22.517 0 26 3.454ZM0 26l5.102-1.53-3.581-3.453L0 26Z" fill="white"/>
+          </svg>
+        </button>
+      </div>
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
         <button class="profile__edit-button" type="button"></button>
@@ -53,6 +58,17 @@
         <input type="text" id="place-name" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required minlength="2" maxlength="30">
         <span class="popup__input_type_error" id="place-name-error"></span>
         <input type="url" name="link" id="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
+        <span class="popup__input_type_error" id="link-error"></span>
+        <button type="submit" class="button popup__button">Сохранить</button>
+      </form>
+    </div>
+  </div>
+  <div class="popup popup_type_new-avatar">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="new-avatar" novalidate>
+        <input type="url" name="avatar-link" id="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
         <span class="popup__input_type_error" id="link-error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>

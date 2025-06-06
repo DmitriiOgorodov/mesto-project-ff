@@ -19,6 +19,8 @@ export function createCard(fieldValues, openCardImage) {
 
   openCardImage(cardImage)
 
+  console.log(fieldValues)
+
   if (fieldValues.likes.some((element) => element['_id'] === 'e30dbc642a6775f59f890fce')){
     cardLikeButton.classList.add('card__like-button_is-active')
     cardLikeButton.addEventListener('click', (evt) => {
@@ -47,3 +49,5 @@ export function deleteCard(evt, id) {
 export function likeCard(evt) {
   evt.target.classList.toggle('card__like-button_is-active')
 }
+
+// Проверка лайка

@@ -1,0 +1,10 @@
+.profile__avatar-button_icon {
+  aspect-ratio: 1;
+  width: 26px;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.profile__avatar-button:hover .profile__avatar-button_icon {
+  opacity: 1;
+}

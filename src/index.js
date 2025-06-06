@@ -1,14 +1,14 @@
 // Темплейт карточки
 import './pages/index.css'
-import {initialCards} from './scripts/cards.js'
+// import {initialCards} from './scripts/cards.js'
 
 // Импорты изображений
 import logo from './images/logo.svg';
-import avatar from './images/avatar.jpg';
+// import avatar from './images/avatar.jpg';
 
 // Установка src для изображений
 document.querySelector('.header__logo').src = logo;
-document.querySelector('.profile__image').style.backgroundImage = `url(${avatar})`;
+// document.querySelector('.profile__image').style.backgroundImage = `url(${avatar})`;
 
 // Импорты функций
 import { createCard } from './components/card.js';
@@ -18,7 +18,8 @@ import {
   loadUserInfo,
   loadCards,
   editProfile,
-  addNewCard
+  addNewCard,
+  updateAvatar
 } from './components/api.js';
 
 // DOM узлы
@@ -32,9 +33,11 @@ const placesList = document.querySelector('.places__list')
 // Логика модальных окон
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
-const editProfilePopap = document.querySelector('.popup_type_edit')
-const newCardPopap = document.querySelector('.popup_type_new-card')
+const avatarButton = document.querySelector('.profile__avatar-button')
+const editForm = document.querySelector('.popup_type_edit')
+const addForm = document.querySelector('.popup_type_new-card')
 const imagePopap = document.querySelector('.popup_type_image')
+const avatarForm = document.querySelector('.popup_type_new-avatar')
 
 // Анимация
 const allPopups = document.querySelectorAll('.popup')
@@ -47,14 +50,19 @@ editButton.addEventListener('click', () =>{
   nameInput.value = document.querySelector('.profile__title').textContent
   jobInput.value = document.querySelector('.profile__description').textContent
   clearValidation(editForm, config)
-  openPopap(editProfilePopap)
+  openPopap(editForm)
 })
 
 addButton.addEventListener('click', () => {
   clearValidation(addForm, config)
-  openPopap(newCardPopap)
+  openPopap(addForm)
   placeInput.value = ''
   linkInput.value = ''
+})
+
+avatarButton.addEventListener('click', () => {
+  openPopap(avatarForm)
+  clearValidation(avatarForm, config)
 })
 
 function openCardImage(item) {
@@ -80,8 +88,31 @@ document.querySelectorAll('.popup').forEach((popup) => {
   })
 })
 
+// Попап добавления аватара
+const avatarLinkInput = avatarForm.querySelector('input[name=avatar-link]')
+const avatarImage = document.querySelector('.profile__image')
+
+  function avatarFormSubmit(evt) {
+  evt.preventDefault();
+  const avatarButtonSave = avatarForm.querySelector('.popup__button');
+  avatarButtonSave.textContent = 'Сохранение...';
+  updateAvatar(avatarLinkInput.value)
+    .then(data => {
+      avatarImage.style.backgroundImage = `url(${data.avatar})`;
+    })
+    .catch(err => console.log(err))
+    .finally(() => {
+      avatarButtonSave.textContent = 'Сохранить';
+    });
+}
+
+avatarForm.addEventListener('submit', (evt) => {
+  avatarFormSubmit(evt)
+  closePopap(avatarForm)
+})
+
 // Попап редактирования профиля
-const editForm = document.querySelector('.popup_type_edit')
+// const editForm = document.querySelector('.popup_type_edit')
 const nameInput = editForm.querySelector('input[name=name]')
 const jobInput = editForm.querySelector('input[name=description]')
 
@@ -112,7 +143,7 @@ editForm.addEventListener('submit', (evt) => {
 });
 
 // Попап добавления карточек
-const addForm = document.querySelector('.popup_type_new-card')
+// const addForm = document.querySelector('.popup_type_new-card')
 const placeInput = addForm.querySelector('input[name=place-name]')
 const linkInput = addForm.querySelector('input[name=link]')
 
@@ -122,15 +153,13 @@ function addCardSubmit(evt) {
   const initialCard = {name: placeInput.value, link: linkInput.value}
 
   addNewCard(initialCard.name, initialCard.link)
-    .then((cardInfo) => {
-      cardInfo.name = initialCard.name
-      cardInfo.link = initialCard.link
+    .then((res) => {
+      placesList.prepend(createCard(res, openCardImage))
+      console.log(res)
     })
     .catch((err) => {
       console.log(err);
     });
-  
-  placesList.prepend(createCard(initialCard, openCardImage))
 
   placeInput.value = ''
   linkInput.value = ''
@@ -153,27 +182,12 @@ const config = {
 
 enableValidation(config);
 
-// // Загрузка данных о пользователе
-// loadUserInfo()
-//   .then((user) => {
-//     profileTitle.textContent = user.name
-//     profileDescription.textContent = user.about
-//     profileImage.style.backgroundImage = user.avatar
-//   })
-
-// Загрузка карточек с сервера
-// loadCards()
-//   .then((cards) => {
-//     cards.forEach((card) => {
-//       placesList.append(createCard(card, openCardImage)); // Полученный массив карточек
-//     })
-//   })
 
 Promise.all([loadUserInfo(), loadCards()])
   .then(([user, cards]) => {
     profileTitle.textContent = user.name
     profileDescription.textContent = user.about
-    profileImage.src = user.avatar
+    profileImage.style.backgroundImage = `url(${user.avatar})`;
 
     console.log(user)
 
