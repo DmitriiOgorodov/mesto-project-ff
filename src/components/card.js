@@ -16,9 +16,17 @@ export function createCard(cardData, handleCardClick, user) {
 
   cardImage.addEventListener('click', handleCardClick);
 
-  cardDeleteButton.addEventListener('click', evt => {
-    deleteCard(evt, cardData['_id'])
-  })
+  // cardDeleteButton.addEventListener('click', evt => {
+  //   deleteCard(evt, cardData['_id'])
+  // })
+
+  if (cardData.owner._id === user._id) {
+    cardDeleteButton.addEventListener('click', evt => {
+    deleteCard(evt, cardData._id)
+  });
+  } else {
+    cardDeleteButton.classList.add('card__delete-button_hidden');
+  }
 
   cardLikeButton.addEventListener('click', evt => {
     if (cardData.likes.some((element) => element['_id'] === user['_id'])) {

@@ -30,7 +30,7 @@ const placesList = document.querySelector('.places__list')
 //   placesList.append(createCard(item, openCardImage))
 // })
 
-
+let currentUser;
 // Логика модальных окон
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
@@ -160,7 +160,7 @@ function addCardSubmit(evt) {
 
   addNewCard(initialCard.name, initialCard.link)
     .then((res) => {
-      placesList.prepend(createCard(res, handleCardImageClick))
+      placesList.prepend(createCard(res, handleCardImageClick, currentUser))
       placeInput.value = ''
       linkInput.value = ''
       closePopap(addForm)
@@ -192,7 +192,7 @@ enableValidation(config);
 
 Promise.all([loadUserInfo(), loadCards()])
   .then(([user, cards]) => {
-    // userID = user._id
+    currentUser = user
     profileTitle.textContent = user.name
     profileDescription.textContent = user.about
     profileImage.style.backgroundImage = `url(${user.avatar})`;
