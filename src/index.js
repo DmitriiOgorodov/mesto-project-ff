@@ -65,7 +65,7 @@ avatarButton.addEventListener('click', () => {
   clearValidation(avatarForm, config)
 })
 
-function openCardImage(item) {
+function showCardImage(item) {
   item.addEventListener('click', (evt) =>{
     openPopap(imagePopap)
     document.querySelector('.popup__image').src = evt.target.src
@@ -154,7 +154,7 @@ function addCardSubmit(evt) {
 
   addNewCard(initialCard.name, initialCard.link)
     .then((res) => {
-      placesList.prepend(createCard(res, openCardImage))
+      placesList.prepend(createCard(res, showCardImage))
       console.log(res)
     })
     .catch((err) => {
@@ -192,7 +192,7 @@ Promise.all([loadUserInfo(), loadCards()])
     console.log(user)
 
     cards.forEach((card) => {
-      placesList.append(createCard(card, openCardImage)); // Полученный массив карточек
+      placesList.append(createCard(card, showCardImage)); // Полученный массив карточек
     })
   })
   .catch((err) => {
