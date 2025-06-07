@@ -32,15 +32,22 @@ export function createCard(cardData, handleCardClick, user) {
       .then(res => {
           cardData.likes = res.likes;
           likeCounter.textContent = res.likes.length;
+          likeCard(evt)
+        })
+      .catch((err) => {
+        console.log(err);
         })
     } else {
       addLike(cardData['_id'])
       .then(res => {
           cardData.likes = res.likes;
           likeCounter.textContent = res.likes.length;
+          likeCard(evt)
         })
+      .catch((err) => {
+        console.log(err);
+      })
     }
-    likeCard(evt)
   })
 
   // showCardImage(cardImage)
@@ -51,8 +58,10 @@ export function createCard(cardData, handleCardClick, user) {
 
 // @todo: Функция удаления карточки
 export function deleteCard(evt, id) {
-  evt.target.closest('.places__item').remove()
   deleteCardFromServer(id)
+    .then(() => {
+      evt.target.closest('.places__item').remove()
+    })
     .catch(err => console.log(err))
 }
 
