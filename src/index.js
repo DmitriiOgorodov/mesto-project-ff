@@ -42,6 +42,7 @@ const addForm = document.querySelector('.popup_type_new-card')
 const imagePopap = document.querySelector('.popup_type_image')
 const avatarForm = document.querySelector('.popup_type_new-avatar')
 const popupImage = document.querySelector('.popup__image');
+const popupCaption = document.querySelector('.popup__caption');
 
 // Анимация
 const allPopups = document.querySelectorAll('.popup')
@@ -72,7 +73,7 @@ avatarButton.addEventListener('click', () => {
 function handleCardImageClick(evt) {
   popupImage.src = evt.target.src;
   popupImage.alt = evt.target.alt;
-  document.querySelector('.popup__caption').textContent = evt.target.alt;
+  popupCaption.textContent = evt.target.alt;
   openPopap(imagePopap);
 }
 
@@ -126,13 +127,13 @@ function editFormSubmit(evt) {
   evt.preventDefault(); 
   const profileButtonSave = editForm.querySelector('.popup__button');
   profileButtonSave.textContent = 'Сохранение...';
-  profileTitle.textContent = nameInput.value
-  profileDescription.textContent = jobInput.value
 
   editProfile(nameInput.value, jobInput.value)
     .then((profileInfo) => {
       profileTitle.textContent = profileInfo.name
       profileDescription.textContent = profileInfo.about
+      profileTitle.textContent = nameInput.value
+      profileDescription.textContent = jobInput.value
       closePopap(editForm)
     })
     .catch((err) => {
@@ -160,7 +161,7 @@ function addCardSubmit(evt) {
 
   addNewCard(initialCard.name, initialCard.link)
     .then((res) => {
-      placesList.prepend(createCard(res, handleCardImageClick, currentUser))
+      placesList.prepend(createCard(res, handleCardImageClick, currentUser._id))
       placeInput.value = ''
       linkInput.value = ''
       closePopap(addForm)
@@ -198,7 +199,7 @@ Promise.all([loadUserInfo(), loadCards()])
     profileImage.style.backgroundImage = `url(${user.avatar})`;
 
     cards.forEach((card) => {
-      placesList.append(createCard(card, handleCardImageClick, user)); // Полученный массив карточек
+      placesList.append(createCard(card, handleCardImageClick, currentUser._id)); // Полученный массив карточек
     })
     return user._id
   })

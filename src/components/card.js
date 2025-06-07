@@ -3,7 +3,7 @@ import { addLike, deleteCardFromServer, deleteLike } from "./api"
 export const cardTemplate = document.querySelector('#card-template').content
 
 // @todo: Функция создания карточки
-export function createCard(cardData, handleCardClick, user) {
+export function createCard(cardData, handleCardClick, userID) {
   const card = cardTemplate.querySelector('.places__item').cloneNode(true)
   const cardDeleteButton = card.querySelector('.card__delete-button')
   const cardLikeButton = card.querySelector('.card__like-button')
@@ -18,7 +18,7 @@ export function createCard(cardData, handleCardClick, user) {
 
   likeCounter.textContent = cardData.likes.length
   
-  if (cardData.owner._id === user._id) {
+  if (cardData.owner._id === userID) {
     cardDeleteButton.addEventListener('click', evt => {
     deleteCard(evt, cardData._id)
   });
@@ -27,7 +27,7 @@ export function createCard(cardData, handleCardClick, user) {
   }
 
   cardLikeButton.addEventListener('click', evt => {
-    if (cardData.likes.some((element) => element['_id'] === user['_id'])) {
+    if (cardData.likes.some((element) => element['_id'] === userID)) {
       deleteLike(cardData['_id'])
       .then(res => {
           cardData.likes = res.likes;
@@ -51,14 +51,14 @@ export function createCard(cardData, handleCardClick, user) {
   })
 
   // showCardImage(cardImage)
-  checkLike(cardData, user, cardLikeButton)
+  checkLike(cardData, userID, cardLikeButton)
 
   return card
 }
 
 // @todo: Функция удаления карточки
-export function deleteCard(evt, id) {
-  deleteCardFromServer(id)
+export function deleteCard(evt, cardID) {
+  deleteCardFromServer(cardID)
     .then(() => {
       evt.target.closest('.places__item').remove()
     })
@@ -71,8 +71,8 @@ export function likeCard(evt) {
 }
 
 // Проверка лайка
-function checkLike(cardData, userData, button) {
-  if (cardData.likes.some((element) => element['_id'] === userData['_id'])){
+function checkLike(cardData, userID, button) {
+  if (cardData.likes.some((element) => element['_id'] === userID)){
     button.classList.add('card__like-button_is-active')
     } else {
     button.classList.remove('card__like-button_is-active')
